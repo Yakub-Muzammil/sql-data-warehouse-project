@@ -39,4 +39,4 @@ Develop a modern data Warehouse using SQL to consolidate sales data, enabling an
 
 ## About Me
 
-Hi there! I'm **Yakub Muzammil**, also known as **Data with Baraa**. 
+Hi there! I'm **Yakub Muzammil**. 

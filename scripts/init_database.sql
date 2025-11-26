@@ -1,42 +1,29 @@
-/*
-=============================================================
-Create Database and Schemas (MySQL Version)
-=============================================================
-Script Purpose:
-    This script creates a new database named 'DataWarehouse' after checking 
-    if it already exists. If the database exists, it is dropped and recreated. 
-    
-    NOTE:
-    MySQL treats a SCHEMA as a DATABASE. Unlike SQL Server, MySQL does not support 
-    multiple schemas inside a single database. Therefore, creating schemas such as 
-    'bronze', 'silver', and 'gold' will create *separate databases.*
-	
-WARNING:
-    Running this script will drop the entire 'DataWarehouse' database if it exists. 
-    All data in that database will be permanently deleted.
-    Proceed with caution and ensure you have proper backups before running this script.
-*/
+-- =============================================================
+-- Create Database and Schemas in PostgreSQL
+-- =============================================================
+-- WARNING:
+-- This script will drop and recreate the 'datawarehouse' database.
+-- All data in the database will be permanently deleted.
 
--- ------------------------------------------------------------
--- Drop and recreate the 'DataWarehouse' database
--- ------------------------------------------------------------
+-- Drop the database if it exists
+DROP DATABASE IF EXISTS datawarehouse;
 
-DROP DATABASE IF EXISTS DataWarehouse;
-CREATE DATABASE DataWarehouse;
+-- Create the new database
+CREATE DATABASE datawarehouse;
 
--- Switch to the new database
-USE DataWarehouse;
+-- ==============================
+-- IMPORTANT MANUAL STEP:
+-- After creating the database, you must CONNECT to 'datawarehouse'
+-- in your client tool (pgAdmin: select database > Query Tool, psql: \c datawarehouse).
+-- All following commands must be run inside the 'datawarehouse' database!
+-- ==============================
 
--- ------------------------------------------------------------
--- Create Schemas (MySQL creates separate databases)
--- ------------------------------------------------------------
+-- Create schemas (once connected to datawarehouse)
+DROP SCHEMA IF EXISTS bronze CASCADE;
+CREATE SCHEMA bronze;
 
-CREATE SCHEMA IF NOT EXISTS bronze;
-CREATE SCHEMA IF NOT EXISTS silver;
-CREATE SCHEMA IF NOT EXISTS gold;
+DROP SCHEMA IF EXISTS silver CASCADE;
+CREATE SCHEMA silver;
 
-/*
-=============================================================
-End of Script
-=============================================================
-*/
+DROP SCHEMA IF EXISTS gold CASCADE;
+CREATE SCHEMA gold;

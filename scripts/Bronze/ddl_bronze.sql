@@ -53,7 +53,7 @@ CREATE TABLE bronze.erp_loc_a101(
 	CNTRY   VARCHAR(50)
 );
 
-CREATE TABLE IF NOT EXISTS datawarehouse_bronze.erp_px_cat_g1v2(
+CREATE TABLE IF NOT EXISTS bronze.erp_px_cat_g1v2(
 	ID              VARCHAR(50),
 	CAT             VARCHAR(50),
 	SUBCAT          VARCHAR(50),

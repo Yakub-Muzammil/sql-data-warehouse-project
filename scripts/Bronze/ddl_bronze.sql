@@ -9,7 +9,7 @@ Script Purpose:
 =============
 */
 
-CREATE TABLE IF NOT EXISTS datawarehouse_bronze.crm_cust_info(
+CREATE TABLE IF NOT EXISTS bronze.crm_cust_info(
 	cst_id               INT,
 	cst_key              VARCHAR(50),
 	cst_firstname        VARCHAR(50),
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS datawarehouse_bronze.crm_cust_info(
 	cst_create_date      DATE
 );
 
-CREATE TABLE IF NOT EXISTS datawarehouse_bronze.crm_prd_info(
+CREATE TABLE IF NOT EXISTS bronze.crm_prd_info(
 	prd_id INT,
 	prd_key         VARCHAR(50),
 	prd_nm          VARCHAR(100),
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS datawarehouse_bronze.crm_prd_info(
 );
 
 
-CREATE TABLE IF NOT EXISTS datawarehouse_bronze.crm_sales_details(
+CREATE TABLE IF NOT EXISTS bronze.crm_sales_details(
 	sls_ord_num    VARCHAR(50),
 	sls_prd_key    VARCHAR(50),
 	sls_cust_id    INT,
@@ -42,13 +42,13 @@ CREATE TABLE IF NOT EXISTS datawarehouse_bronze.crm_sales_details(
 	sls_price      INT
 );
 
-CREATE TABLE IF NOT EXISTS datawarehouse_bronze.erp_cust_az12(
+CREATE TABLE IF NOT EXISTS bronze.erp_cust_az12(
 	CID     VARCHAR(50),
 	BDATE   DATE,
 	GEN     VARCHAR(50)
 );
 
-CREATE TABLE datawarehouse_bronze.erp_loc_a101(
+CREATE TABLE bronze.erp_loc_a101(
 	CID     VARCHAR(50),
 	CNTRY   VARCHAR(50)
 );

@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS bronze.erp_cust_az12(
 	GEN     VARCHAR(50)
 );
 
-CREATE TABLE bronze.erp_loc_a101(
+CREATE TABLE IF NOT EXISTS bronze.erp_loc_a101(
 	CID     VARCHAR(50),
 	CNTRY   VARCHAR(50)
 );

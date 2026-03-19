@@ -1,0 +1,78 @@
+*/
+============================================================
+Product Report
+============================================================
+Purpose:
+  - This report consolidates key product metrics and behaviors
+
+Highlights:
+  1.Gathers essential information such as product key,cost details.
+  2.Aggregate product level metrics:
+    - total quantity
+    - total sales
+    - total order
+  3.Calculate valuable KPIs:
+    - average order revenue
+    - average selling price
+    - average montly revenue
+============================================================
+*/
+CREATE OR REPLACE VIEW gold.report_products
+ AS
+ WITH base_query AS (
+         SELECT f.order_number,
+            f.order_date,
+            f.customer_key,
+            f.sales_amount,
+            f.quantity,
+            p.product_key,
+            p.product_name,
+            p.category,
+            p.subcategory,
+            p.cost
+           FROM gold.fact_sales f
+             LEFT JOIN gold.dim_products p ON f.product_key = p.product_key
+          WHERE f.order_date IS NOT NULL
+        ), product_aggregations AS (
+         SELECT base_query.product_key,
+            base_query.product_name,
+            base_query.category,
+            base_query.subcategory,
+            base_query.cost,
+            (date_part('year'::text, max(base_query.order_date)) - date_part('year'::text, min(base_query.order_date))) * 12::double precision + (date_part('month'::text, max(base_query.order_date)) - date_part('month'::text, min(base_query.order_date))) AS life_span,
+            max(base_query.order_date) AS last_sale_date,
+            count(DISTINCT base_query.order_number) AS total_orders,
+            count(DISTINCT base_query.customer_key) AS total_customers,
+            sum(base_query.sales_amount) AS total_sales,
+            sum(base_query.quantity) AS total_quantity,
+            round(avg(base_query.sales_amount::numeric / NULLIF(base_query.quantity, 0)::numeric), 1) AS avg_selling_price
+           FROM base_query
+          GROUP BY base_query.product_key, base_query.product_name, base_query.category, base_query.subcategory, base_query.cost
+        )
+ SELECT product_key,
+    product_name,
+    category,
+    subcategory,
+    cost,
+    last_sale_date,
+    EXTRACT(year FROM age(CURRENT_DATE::timestamp with time zone, last_sale_date::timestamp with time zone)) * 12::numeric + EXTRACT(month FROM age(CURRENT_DATE::timestamp with time zone, last_sale_date::timestamp with time zone)) AS recency_in_months,
+        CASE
+            WHEN total_sales > 5000 THEN 'high-performer'::text
+            WHEN total_sales >= 1000 THEN 'mid-range'::text
+            ELSE 'low-performer'::text
+        END AS product_segment,
+    life_span,
+    total_orders,
+    total_sales,
+    total_quantity,
+    total_customers,
+    avg_selling_price,
+        CASE
+            WHEN total_orders = 0 THEN 0::bigint
+            ELSE total_sales / total_orders
+        END AS avg_order_revenue,
+        CASE
+            WHEN life_span = 0::double precision THEN total_sales::double precision
+            ELSE total_sales::double precision / life_span
+        END AS avg_monthly_revenue
+   FROM product_aggregations;
